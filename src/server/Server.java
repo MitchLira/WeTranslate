@@ -26,7 +26,7 @@ public class Server {
 	static class MyHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange httpExchange) throws IOException {
-            String response = "This is the response!";
+            String response = "This is the response! Is it working? ";
             Map<String, String> params = queryToMap(httpExchange.getRequestURI().getQuery());
             
             if (params.containsKey("name")) {
