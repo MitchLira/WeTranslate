@@ -35,14 +35,30 @@
       <plugin>
 		<groupId>org.apache.maven.plugins</groupId>
 		<artifactId>maven-jar-plugin</artifactId>
-		<configuration>
-	  		<archive>
-				<manifest>
-					<!-- Jar file entry point -->
-					<mainClass>server.Server</mainClass>
-				</manifest>
-	  		</archive>
-		</configuration>
+		<executions>
+			<execution>
+				<id>buildS</id>
+				<configuration>
+			  		<archive>
+						<manifest>
+							<!-- Jar file entry point -->
+							<mainClass>server.Server</mainClass>
+						</manifest>
+			  		</archive>
+				</configuration>
+			</execution>
+			<execution>
+				<id>buildLB</id>
+				<configuration>
+			  		<archive>
+						<manifest>
+							<!-- Jar file entry point -->
+							<mainClass>server.LoadBalancer</mainClass>
+						</manifest>
+			  		</archive>
+				</configuration>
+			</execution>
+		</executions>
       </plugin>
     </plugins>
   </build>

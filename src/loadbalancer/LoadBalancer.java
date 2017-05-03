@@ -1,14 +1,12 @@
-package server;
+package loadbalancer;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import com.sun.net.httpserver.HttpServer;
 
-import com.sun.net.httpserver.*;
 
+public class LoadBalancer {
 
-public class Server {
-	
 	public static void main(String[] args) throws IOException {
 		/*
 		int port;
