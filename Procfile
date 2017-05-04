@@ -1,1 +1,1 @@
-web: java -jar target/wetranslate.jar
+web: java -cp target/wetranslate.jar loadbalancer.LoadBalancer

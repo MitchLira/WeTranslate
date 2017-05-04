@@ -21,7 +21,7 @@ public class LoadBalancer {
 		else 				 port = Integer.parseInt(portStr);
 		*/
 		
-		int port = Integer.parseInt(args[0]);
+		int port = Integer.parseInt(System.getenv("PORT"));
 		
 		/*
 		HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
