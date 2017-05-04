@@ -1,6 +1,7 @@
 package loadbalancer;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +22,7 @@ public class LoadBalancer {
 		else 				 port = Integer.parseInt(portStr);
 		*/
 		
-		int port = Integer.parseInt(System.getenv("PORT"));
+		int port = Integer.parseInt(args[0]);
 		
 		/*
 		HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
@@ -37,6 +38,9 @@ public class LoadBalancer {
 	
 	public LoadBalancer(int port) throws IOException {
 		this.nodes = new HashMap<>();
+		
+		InetAddress addr = InetAddress.getByName("wetranslate.ddns.net");
+		System.out.println(addr.getHostAddress());
 		this.server = HttpServer.create(new InetSocketAddress(port), 0);
 		
 		System.out.println("Server running on " + server.getAddress());
