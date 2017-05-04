@@ -18,6 +18,8 @@ public class TestHandler implements HttpHandler {
         	response += " Hey " + params.get("name") + "!";
         }
         
+        System.out.println(response);
+        
         Exchanges.writeResponse(httpExchange, response);
     }
 }

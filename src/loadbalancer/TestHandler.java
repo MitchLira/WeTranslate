@@ -29,9 +29,7 @@ public class TestHandler implements HttpHandler {
     	}
     	
     	httpExchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
-    	System.out.println(httpExchange.getRemoteAddress());
-    	System.out.println(httpExchange.getHttpContext());
-    	System.out.println("Redirecting");
+    	System.out.println("Redirecting to " + builder.toString());
     	
         Exchanges.redirectTo(httpExchange, builder.toString());
     }
