@@ -17,7 +17,7 @@ public class ConnectServer implements HttpHandler {
 	
 	@Override
     public void handle(HttpExchange httpExchange) throws IOException {
-    	String addr = httpExchange.getRemoteAddress().toString().split(":")[0];
+    	String addr = httpExchange.getLocalAddress().toString().split(":")[0];
     	Map<String, String> params = Exchanges.queryToMap(httpExchange.getRequestURI().getQuery());
     	
     	System.out.println(addr + ":" + params.get("port"));

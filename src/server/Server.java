@@ -29,7 +29,7 @@ public class Server {
 		server.start();
 		
 		HttpURLConnection.setFollowRedirects(true);
-		HttpURLConnection connection = (HttpURLConnection) new URL("http://0.0.0.0:8000/connect?port=7001").openConnection();
+		HttpURLConnection connection = (HttpURLConnection) new URL("http://wetranslate.herokuapp.com:8000/connect?port=7001").openConnection();
 		connection.setRequestMethod("POST");
 		connection.getResponseCode();
 		
