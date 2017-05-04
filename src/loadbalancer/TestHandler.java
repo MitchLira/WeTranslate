@@ -21,6 +21,7 @@ public class TestHandler implements HttpHandler {
     	String addr_port = loadBalancer.getServer();
     	//httpExchange.getRemoteAddress().toString().split(":")[0];
     	
+    	builder.append("http:/");
     	builder.append(addr_port);
     	builder.append("/test");
     	if (httpExchange.getRequestURI().getQuery() != null) {
