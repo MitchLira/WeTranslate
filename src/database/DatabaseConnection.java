@@ -1,46 +1,30 @@
 package database;
 
-import java.sql.*;
+import com.sun.net.httpserver.HttpServer;
+
+import java.io.IOException;
+import java.net.InetSocketAddress;
 
 public class DatabaseConnection {
 
     public static void main(String args[]){
-        connect();
+        new DatabaseConnection(Integer.parseInt(args[0]));
     }
 
-    public static void connect() {
-        Connection conn = null;
+    public DatabaseConnection(int port){
+
         try {
-            // db parameters
-            String url = "jdbc:sqlite:database.db";
-            // create a connection to the database
-            conn = DriverManager.getConnection(url);
+            HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
+            server.createContext("/insertUser",new InsertUserHandler());
+            server.createContext("/insertRequest",new InsertRequestHandler());
+            server.createContext("/insertTranslation",new InsertTranslationHandler());
+            server.createContext("/selectRequestTranslation",new SelectRequestTranslation());
+            server.start();
 
-            String query = "SELECT username FROM User WHERE email='ola4'";
-
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
-
-            while (rs.next()) {
-                String username = rs.getString("username");
-                System.out.println("Username: "+username);
-            }
-
-            System.out.println("Connection to SQLite has been established.");
-
-            stmt.close();
-
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        } finally {
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException ex) {
-                System.out.println(ex.getMessage());
-            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
     }
 
 }
