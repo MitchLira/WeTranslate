@@ -11,9 +11,9 @@ import com.sun.net.httpserver.HttpExchange;
 public class Exchanges {
 	
 	
-	public static void writeResponse(HttpExchange httpExchange, String response) throws IOException {
-	    httpExchange.sendResponseHeaders(200, response.length());
-	    OutputStream os = httpExchange.getResponseBody();
+	public static void writeResponse(HttpExchange exch, int code, String response) throws IOException {
+	    exch.sendResponseHeaders(code, response.length());
+	    OutputStream os = exch.getResponseBody();
 	    os.write(response.getBytes());
 	    os.close();
 	}
@@ -41,9 +41,22 @@ public class Exchanges {
 	}
 	
 	
-	public static void redirectTo(HttpExchange httpExchange, String location) throws IOException {
-		httpExchange.getResponseHeaders().set("Location", location);
-        httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_SEE_OTHER, -1);
+	public static void redirectTo(HttpExchange exch, String location) throws IOException {
+		exch.getResponseHeaders().set("Location", location);
+		exch.sendResponseHeaders(HttpURLConnection.HTTP_SEE_OTHER, -1);
+	}
+
+	public static String buildRedirectPath(HttpExchange exch, String address) {
+		StringBuilder builder = new StringBuilder();
+		
+		builder.append("http:/");
+    	builder.append(address);
+    	builder.append("/test");
+    	if (exch.getRequestURI().getQuery() != null) {
+    		builder.append("?" + exch.getRequestURI().getQuery());
+    	}
+    	
+    	return builder.toString();
 	}
 	
 }

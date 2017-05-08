@@ -5,6 +5,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
+import utils.RequestMethod;
 
 import com.sun.net.httpserver.HttpServer;
 
@@ -38,13 +39,15 @@ public class LoadBalancer {
 	
 	public LoadBalancer(int port) throws IOException {
 		this.nodes = new HashMap<>();
-		
-		InetAddress addr = InetAddress.getByName("wetranslate.ddns.net");
-		System.out.println(addr.getHostAddress());
 		this.server = HttpServer.create(new InetSocketAddress(port), 0);
 		
 		System.out.println("Server running on " + server.getAddress());
-		server.createContext("/test", new TestHandler(this));
+		server.createContext("/test", new RedirectHandler(this, RequestMethod.getInsertMethods()));
+		server.createContext("/insertUser", new RedirectHandler(this, RequestMethod.getInsertMethods()));
+		server.createContext("/insertRequest", new RedirectHandler(this, RequestMethod.getInsertMethods()));
+		server.createContext("/insertTranslation", new RedirectHandler(this, RequestMethod.getInsertMethods()));
+		server.createContext("/getRequests", new RedirectHandler(this, RequestMethod.getReadMethods()));
+		server.createContext("/getTranslations", new RedirectHandler(this, RequestMethod.getReadMethods()));
 		server.createContext("/connect", new ConnectServer(this));
 	}
 	
