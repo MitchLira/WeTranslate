@@ -8,6 +8,7 @@ import java.sql.*;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
+import database.Database;
 import utils.Exchanges;
 
 public class TestHandler implements HttpHandler {
@@ -30,10 +31,7 @@ public class TestHandler implements HttpHandler {
 				System.out.println("Upsss");
 			
 			
-			PreparedStatement stmt = connection.prepareStatement("INSERT INTO users VALUES (?, ?)");
-			stmt.setString(1, "joao");
-			stmt.setString(2, "whatafa");
-			stmt.executeUpdate();
+			Database.getTranslations(1);
 			
 			
 		} catch (ClassNotFoundException e) {
