@@ -29,6 +29,13 @@ public class TestHandler implements HttpHandler {
 			else
 				System.out.println("Upsss");
 			
+			
+			PreparedStatement stmt = connection.prepareStatement("INSERT INTO users VALUES (?, ?)");
+			stmt.setString(1, "joao");
+			stmt.setString(2, "whatafa");
+			stmt.executeUpdate();
+			
+			
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -36,7 +43,6 @@ public class TestHandler implements HttpHandler {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        
         
         System.out.println(response);
         
