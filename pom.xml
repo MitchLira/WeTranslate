@@ -35,6 +35,7 @@
       <plugin>
 		<groupId>org.apache.maven.plugins</groupId>
 		<artifactId>maven-jar-plugin</artifactId>
+		<version>3.0.2</version>
 		<executions>
 			<execution>
 				<id>buildS</id>
@@ -42,7 +43,7 @@
 			  		<archive>
 						<manifest>
 							<!-- Jar file entry point -->
-							<mainClass>server.Server</mainClass>
+							<mainClass>server.Node</mainClass>
 						</manifest>
 			  		</archive>
 				</configuration>
@@ -54,6 +55,17 @@
 						<manifest>
 							<!-- Jar file entry point -->
 							<mainClass>server.LoadBalancer</mainClass>
+						</manifest>
+			  		</archive>
+				</configuration>
+			</execution>
+			<execution>
+				<id>buildDB</id>
+				<configuration>
+			  		<archive>
+						<manifest>
+							<!-- Jar file entry point -->
+							<mainClass>database.DatabaseConnection</mainClass>
 						</manifest>
 			  		</archive>
 				</configuration>

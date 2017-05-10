@@ -2,6 +2,8 @@ package database;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+
+import sun.net.www.protocol.http.HttpURLConnection;
 import utils.Exchanges;
 
 import java.io.IOException;
@@ -30,7 +32,7 @@ public class SelectRequestTranslation implements HttpHandler{
                 stmt.close();
             }
             else{
-                Exchanges.writeResponse(httpExchange,"Introduza todos os argumentos!");
+                Exchanges.writeResponse(httpExchange, HttpURLConnection.HTTP_BAD_REQUEST, "Introduza todos os argumentos!");
             }
 
             conn.close();

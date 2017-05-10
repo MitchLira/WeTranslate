@@ -2,6 +2,8 @@ package database;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+
+import sun.net.www.protocol.http.HttpURLConnection;
 import utils.Exchanges;
 
 import java.io.IOException;
@@ -24,17 +26,17 @@ public class InsertRequestHandler implements HttpHandler{
                 String query = this.queryConstructor(values);
 
                 Statement stmt = conn.createStatement();
-                if(stmt.executeUpdate(query)==1){
-                    Exchanges.writeResponse(httpExchange,"Pedido introduzido com sucesso!");
+                if(stmt.executeUpdate(query) == 1) {
+                    Exchanges.writeResponse(httpExchange, HttpURLConnection.HTTP_OK, "Pedido introduzido com sucesso!");
                 }
                 else{
-                    Exchanges.writeResponse(httpExchange,"Utilizador não existe existe!");
+                    Exchanges.writeResponse(httpExchange, HttpURLConnection.HTTP_BAD_REQUEST, "Utilizador não existe existe!");
                 }
 
                 stmt.close();
             }
             else{
-                Exchanges.writeResponse(httpExchange,"Faltam argumentos!");
+                Exchanges.writeResponse(httpExchange, HttpURLConnection.HTTP_BAD_REQUEST, "Faltam argumentos!");
             }
 
             conn.close();

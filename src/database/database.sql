@@ -1,10 +1,10 @@
-CREATE TABLE User(
+CREATE TABLE User (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         email VARCHAR UNIQUE,
         password VARCHAR
 );
 
-CREATE TABLE Request(
+CREATE TABLE Request (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         field_text VARCHAR,
         translate_from VARCHAR,
@@ -13,7 +13,7 @@ CREATE TABLE Request(
         translation_id INTEGER REFERENCES Translation
 );
 
-CREATE TABLE Translation(
+CREATE TABLE Translation (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         translated_text VARCHAR,
         request_id INTEGER REFERENCES Request,

@@ -11,14 +11,6 @@ import com.sun.net.httpserver.HttpExchange;
 
 public class Exchanges {
 	
-	
-	public static void writeResponse(HttpExchange exch, int code, String response) throws IOException {
-	    exch.sendResponseHeaders(code, response.length());
-	    OutputStream os = exch.getResponseBody();
-	    os.write(response.getBytes());
-	    os.close();
-	}
-	
 	/**
 	 * returns the url parameters in a map
 	 * @param query
@@ -41,6 +33,16 @@ public class Exchanges {
 	    return result;
 	}
 	
+	public static void writeResponse(HttpExchange exch, int code, String response) throws IOException {
+	    exch.sendResponseHeaders(code, response.length());
+	    OutputStream os = exch.getResponseBody();
+	    os.write(response.getBytes());
+	    os.close();
+	}
+	
+	public static void writeResponse(HttpExchange exch, int code) throws IOException {
+		exch.sendResponseHeaders(code, 0);
+	}
 	
 	public static void redirectTo(HttpExchange exch, String location) throws IOException {
 		exch.getResponseHeaders().set("Location", location);
@@ -52,7 +54,7 @@ public class Exchanges {
 		
 		builder.append("http:/");
     	builder.append(address);
-    	builder.append("/test");
+    	builder.append(exch.getRequestURI().getPath());
     	if (exch.getRequestURI().getQuery() != null) {
     		builder.append("?" + exch.getRequestURI().getQuery());
     	}

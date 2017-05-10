@@ -2,6 +2,8 @@ package database;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+
+import sun.net.www.protocol.http.HttpURLConnection;
 import utils.Exchanges;
 
 import java.io.IOException;
@@ -23,16 +25,16 @@ public class InsertUserHandler implements HttpHandler {
 
                 Statement stmt = conn.createStatement();
                 if(stmt.executeUpdate(query)==1){
-                    Exchanges.writeResponse(httpExchange,"Utilizador introduzido com sucesso!");
+                    Exchanges.writeResponse(httpExchange, HttpURLConnection.HTTP_OK, "Utilizador introduzido com sucesso!");
                 }
                 else{
-                    Exchanges.writeResponse(httpExchange,"Utilizador já existe!");
+                    Exchanges.writeResponse(httpExchange, HttpURLConnection.HTTP_BAD_REQUEST, "Utilizador já existe!");
                 }
 
                 stmt.close();
             }
             else{
-                Exchanges.writeResponse(httpExchange,"Não existe argumentos suficientes!");
+                Exchanges.writeResponse(httpExchange, HttpURLConnection.HTTP_BAD_REQUEST, "Não existe argumentos suficientes!");
             }
 
             conn.close();
