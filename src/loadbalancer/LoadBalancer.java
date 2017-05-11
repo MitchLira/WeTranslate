@@ -26,7 +26,7 @@ public class LoadBalancer {
 		this.server = HttpServer.create(new InetSocketAddress(port), 0);
 		
 		System.out.println("Server running on " + server.getAddress());
-		server.createContext("/test", new RedirectHandler(this, RequestMethod.getInsertMethods()));
+		server.createContext("/test", new RedirectHandler(this, RequestMethod.getReadMethods()));
 		server.createContext("/insertUser", new RedirectHandler(this, RequestMethod.getInsertMethods()));
 		server.createContext("/insertRequest", new RedirectHandler(this, RequestMethod.getInsertMethods()));
 		server.createContext("/insertTranslation", new RedirectHandler(this, RequestMethod.getInsertMethods()));

@@ -7,6 +7,7 @@ import java.util.Map;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
+import database.Database;
 import utils.Exchanges;
 
 public class InsertTranslation extends NodeHandler implements HttpHandler {
@@ -23,11 +24,13 @@ public class InsertTranslation extends NodeHandler implements HttpHandler {
 			return;
 		}
 		
+		String email = params.get("email");
+		String text = params.get("text");
+		int requestID = Integer.parseInt(params.get("requestid"));
 		
-		String response = "Email: " + params.get("email") + " & " + "RequestID: "  + params.get("requestid")
-		+ " & " + "Text: "  + params.get("text");
-		System.out.println("Insert: " + response);
-		
-		Exchanges.writeResponse(exch, HttpURLConnection.HTTP_OK, response);
+		if (Database.insertTranslation(email, text, requestID))
+			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_OK, "Inserted translation");
+		else
+			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_CONFLICT, "Error inserting translation");
 	}
 }

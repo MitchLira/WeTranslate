@@ -7,6 +7,7 @@ import java.util.Map;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
+import database.Database;
 import utils.Exchanges;
 
 public class InsertRequest extends NodeHandler implements HttpHandler {
@@ -23,12 +24,15 @@ public class InsertRequest extends NodeHandler implements HttpHandler {
 			return;
 		}
 		
+		String email = params.get("email");
+		String from = params.get("from");
+		String to = params.get("to");
+		String text = params.get("text");
 		
-		String response = "Email: " + params.get("email") + " & " + "From: "  + params.get("from")
-		+ " & " + "To: "  + params.get("to") + " & " + "text: "  + params.get("text");
-		System.out.println("Insert: " + response);
-		
-		Exchanges.writeResponse(exch, HttpURLConnection.HTTP_OK, response);
+		if (Database.insertRequest(email, from, to, text))
+			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_OK, "Inserted request");
+		else
+			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_CONFLICT, "Error inserting request");
 	}
 
 }
