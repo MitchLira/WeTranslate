@@ -29,11 +29,10 @@ public class GetRequests extends NodeHandler implements HttpHandler {
 		String source = params.get("from");
 		String target = params.get("to");
 		
-		JSONArray jsonArray = Database.getRequests(source, target);
+		JSONArray requestsJSON = Database.getRequests(source, target);
 		
-		
-		if (jsonArray != null)
-			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_OK, jsonArray.toString());
+		if (requestsJSON != null)
+			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_OK, requestsJSON.toString());
 		else
 			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_BAD_REQUEST, "Error getting requests");
 	}

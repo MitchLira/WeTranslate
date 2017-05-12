@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.Map;
 
+import org.json.JSONArray;
+
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
@@ -26,8 +28,10 @@ public class GetTranslations extends NodeHandler implements HttpHandler {
 
 		int requestID = Integer.parseInt(params.get("requestid"));
 		
-		if (Database.getTranslations(requestID))
-			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_OK, "Aqui coisas");
+		JSONArray translationsJSON = Database.getTranslations(requestID);
+		
+		if (translationsJSON != null)
+			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_OK, translationsJSON.toString());
 		else
 			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_BAD_REQUEST, "Error getting translations");
 	}

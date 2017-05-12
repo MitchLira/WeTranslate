@@ -84,8 +84,8 @@ public class Database {
 			stmt.setString(2, target);
 			
 			ResultSet rs = stmt.executeQuery();
-			
 			return Converter.toJSON(rs);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -93,7 +93,7 @@ public class Database {
 	}
 	
 	
-	public static boolean getTranslations(int requestId) {
+	public static JSONArray getTranslations(int requestId) {
 		try {
 			Connection connection = connect();
 			String sql = "SELECT * FROM translations WHERE requestid = ?";
@@ -102,22 +102,12 @@ public class Database {
 			stmt.setInt(1, requestId);
 			
 			ResultSet rs = stmt.executeQuery();
+			return Converter.toJSON(rs);
 			
-			ResultSetMetaData metaData = rs.getMetaData();
-			int columnCount = metaData.getColumnCount();
-			while(rs.next()) {
-			    for(int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
-			        Object object = rs.getObject(columnIndex);
-			        System.out.printf("%s, ", object == null ? "NULL" : object.toString());
-			    }
-			    System.out.printf("%n");
-			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			return false;
+			return null;
 		}
-		
-		return true;
 	}
 	
 }
