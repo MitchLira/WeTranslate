@@ -24,7 +24,7 @@ public class ConnectServer implements HttpHandler {
 			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_BAD_METHOD, "Bad method");
 		}
 		
-    	String addr = exch.getRemoteAddress().toString().split(":")[0];
+    	String addr = exch.getRemoteAddress().getAddress().getHostAddress();
     	Map<String, String> params = Exchanges.queryToMap(exch.getRequestURI().getQuery());
     	
     	System.out.println("New node: " + addr + ":" + params.get("port"));

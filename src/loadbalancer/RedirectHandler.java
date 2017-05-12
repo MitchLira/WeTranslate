@@ -32,8 +32,8 @@ public class RedirectHandler implements HttpHandler {
 			return;
 		}
 		
-		String address = loadBalancer.getServer();
-		String redirectPath = Exchanges.buildRedirectPath(exch, address);
+		String location = loadBalancer.getServer().getLocation();
+		String redirectPath = Exchanges.buildRedirectPath(exch, location);
 		
 		System.out.println("Redirecting to: " + redirectPath);
 		Exchanges.redirectTo(exch, redirectPath);

@@ -1,4 +1,4 @@
-package server;
+package node;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -10,9 +10,9 @@ import com.sun.net.httpserver.HttpHandler;
 import database.Database;
 import utils.Exchanges;
 
-public class InsertTranslation extends NodeHandler implements HttpHandler {
+public class InsertUser extends NodeHandler implements HttpHandler {
 
-	public InsertTranslation(String[] requiredParams) {
+	public InsertUser(String[] requiredParams) {
 		super(requiredParams);
 	}
 
@@ -25,12 +25,11 @@ public class InsertTranslation extends NodeHandler implements HttpHandler {
 		}
 		
 		String email = params.get("email");
-		String text = params.get("text");
-		int requestID = Integer.parseInt(params.get("requestid"));
+		String password = params.get("password");
 		
-		if (Database.insertTranslation(email, text, requestID))
-			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_OK, "Inserted translation");
+		if (Database.insertUser(email, password))	
+			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_OK, "Inserted user");
 		else
-			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_CONFLICT, "Error inserting translation");
+			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_CONFLICT, "User already exists");
 	}
 }

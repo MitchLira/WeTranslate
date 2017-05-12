@@ -1,17 +1,19 @@
 package loadbalancer;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
+
+import utils.NodeData;
+import utils.NodeList;
 import utils.RequestMethod;
 
 import com.sun.net.httpserver.HttpServer;
 
 
 public class LoadBalancer {
-	private Map<String, String> nodes;
+	private NodeList nodes;
 	HttpServer server;
 
 	public static void main(String[] args) throws IOException {
@@ -22,7 +24,7 @@ public class LoadBalancer {
 	}
 	
 	public LoadBalancer(int port) throws IOException {
-		this.nodes = new HashMap<>();
+		this.nodes = new NodeList();
 		this.server = HttpServer.create(new InetSocketAddress(port), 0);
 		
 		System.out.println("Server running on " + server.getAddress());
@@ -40,14 +42,10 @@ public class LoadBalancer {
 	}
 
 	public void addServer(String addr, String port) {
-		nodes.put(addr, port);
+		nodes.addNode(new NodeData(addr, port));
 	}
 
-	public String getServer() {
-		for (Map.Entry<String, String> entry : nodes.entrySet()) {
-			return entry.getKey() + ":" + entry.getValue();
-		}
-		
-		return null;
+	public NodeData getServer() {
+		return nodes.getNode();
 	}
 }

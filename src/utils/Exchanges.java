@@ -49,11 +49,11 @@ public class Exchanges {
 		exch.sendResponseHeaders(HttpURLConnection.HTTP_SEE_OTHER, -1);
 	}
 
-	public static String buildRedirectPath(HttpExchange exch, String address) {
+	public static String buildRedirectPath(HttpExchange exch, String location) {
 		StringBuilder builder = new StringBuilder();
 		
-		builder.append("http:/");
-    	builder.append(address);
+		builder.append("http://");
+    	builder.append(location);
     	builder.append(exch.getRequestURI().getPath());
     	if (exch.getRequestURI().getQuery() != null) {
     		builder.append("?" + exch.getRequestURI().getQuery());
