@@ -9,7 +9,7 @@ import utils.Converter;
 public class Database {
 	public static Connection connect() throws ClassNotFoundException, SQLException {
 		Class.forName("org.postgresql.Driver");
-		Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/sdis","sdis", "sdisdb");
+		Connection connection = DriverManager.getConnection("jdbc:postgresql://wetranslate.ddns.net:5432/sdis","sdis", "sdisdb");
 		return connection;
 	}
 	
