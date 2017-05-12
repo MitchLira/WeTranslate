@@ -30,12 +30,8 @@ public class Node {
 		server.createContext("/insertUser", new InsertUser(new String[]{"email", "password"}));
 		server.createContext("/insertRequest", new InsertRequest(new String[]{"email", "from", "to", "text"}));
 		server.createContext("/insertTranslation", new InsertTranslation(new String[]{"email", "requestid", "text"}));
-		
-		/*
-		server.createContext("/getRequests", new RedirectHandler(this, RequestMethod.getReadMethods()));
-		server.createContext("/getTranslations", new RedirectHandler(this, RequestMethod.getReadMethods()));
-		server.createContext("/connect", new ConnectServer(this));
-		*/
+		server.createContext("/getRequests", new GetRequests(new String[]{"from", "to"}));
+		server.createContext("/getTranslations", new GetTranslations(new String[]{"requestid"}));
 	}
 	
 	public boolean start() throws IOException {
