@@ -1,9 +1,8 @@
 package loadbalancer;
 
 import java.io.IOException;
+
 import java.net.InetSocketAddress;
-import java.util.HashMap;
-import java.util.Map;
 
 import utils.NodeData;
 import utils.NodeList;
@@ -11,13 +10,32 @@ import utils.RequestMethod;
 
 import com.sun.net.httpserver.HttpServer;
 
+import org.apache.commons.cli.*;
 
 public class LoadBalancer {
 	private NodeList nodes;
 	HttpServer server;
 
 	public static void main(String[] args) throws IOException {
-		int port = Integer.parseInt(args[0]);
+		Options options = new Options();
+		
+		Option portOption = new Option("p", "port", true, "listening port");
+		portOption.setRequired(true);
+		options.addOption(portOption);
+		
+		CommandLineParser parser = new DefaultParser();
+		HelpFormatter formatter = new HelpFormatter();
+		CommandLine cmd;
+		
+		try {
+			cmd = parser.parse(options, args);
+		} catch (ParseException e) {
+			formatter.printHelp("LoadBalancer", options);
+			System.exit(1);
+			return;
+		}
+		
+		int port = Integer.parseInt(cmd.getOptionValue("port"));
 		
 		LoadBalancer loadBalancer = new LoadBalancer(port);
 		loadBalancer.start();

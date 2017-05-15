@@ -4,12 +4,13 @@ import java.sql.*;
 
 import org.json.JSONArray;
 
+import node.Node;
 import utils.Converter;
 
 public class Database {
 	public static Connection connect() throws ClassNotFoundException, SQLException {
 		Class.forName("org.postgresql.Driver");
-		Connection connection = DriverManager.getConnection("jdbc:postgresql://wetranslate.ddns.net:5432/sdis","sdis", "sdisdb");
+		Connection connection = DriverManager.getConnection("jdbc:postgresql://" + Node.hostName + ":5432/sdis", "sdis", "sdisdb");
 		return connection;
 	}
 	
@@ -71,6 +72,51 @@ public class Database {
 		}
 		
 		return true;	
+	}
+	
+	
+	public static boolean validUser(String username, String password) {
+		try {
+			Connection connection = connect();
+			String sql = ("SELECT email, password FROM requests WHERE (email = ? AND password = ?)");
+
+			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt.setString(1, username);
+			stmt.setString(2, password);
+
+			ResultSet rs = stmt.executeQuery();
+			
+			while (rs.next()) {
+				String usernamedb = rs.getString("email");
+				String passworddb =  rs.getString("password");
+
+				if ((username.equals(usernamedb)) && (password.equals(passworddb)))
+					return true;
+			}
+		}
+		catch (Exception e) {
+			return false;
+		}
+
+		return false;
+	}
+	
+	
+	public static boolean userAlreadyExists(String username) {
+		try {
+			Connection connection = connect();
+			String sql = ("SELECT email FROM requests WHERE email = ? ");
+
+			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt.setString(1, username);
+
+			ResultSet rs = stmt.executeQuery();
+			
+			return !rs.next() ? true : false;
+		}
+		catch (Exception e) {
+			return false;
+		}
 	}
 	
 	

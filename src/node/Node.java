@@ -4,17 +4,53 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.URL;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+
 import utils.HttpConnection;
 
 import com.sun.net.httpserver.*;
 
 
 public class Node {
+	public static String hostName = "wetranslate.ddns.net";
 	private HttpServer server;
 	private int port;
 	
 	public static void main(String[] args) throws IOException {		
-		int port = Integer.parseInt(args[0]);
+		Options options = new Options();
+		
+		Option portOption = new Option("p", "port", true, "listening port");
+		portOption.setRequired(true);
+		options.addOption(portOption);
+		
+		Option localhostOption = new Option("localhost", false, "working on localhost");
+		localhostOption.setRequired(false);
+		options.addOption(localhostOption);
+		
+		CommandLineParser parser = new DefaultParser();
+		HelpFormatter formatter = new HelpFormatter();
+		CommandLine cmd;
+		
+		try {
+			cmd = parser.parse(options, args);
+		} catch (ParseException e) {
+			formatter.printHelp("LoadBalancer", options);
+			System.exit(1);
+			return;
+		}
+		
+		int port = Integer.parseInt(cmd.getOptionValue("port"));
+		
+		if (cmd.hasOption("localhost"))
+			hostName = "localhost";
+		
 		Node node = new Node(port);
 		node.start();
 	}
@@ -38,7 +74,7 @@ public class Node {
 		server.start();
 		
 		/* Connect to Load Balancer */
-		HttpURLConnection connection = (HttpURLConnection) new URL("http://wetranslate.ddns.net:7000/connect?port=" + port).openConnection();
+		HttpURLConnection connection = (HttpURLConnection) new URL("http://" + hostName + ":7000/connect?port=" + port).openConnection();
 		connection.setRequestMethod("POST");
 		
 		if (HttpConnection.getCode(connection) != HttpURLConnection.HTTP_ACCEPTED) {
