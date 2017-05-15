@@ -26,7 +26,6 @@ public class UserExists extends NodeHandler implements HttpHandler {
 		}
 		
 		String email = params.get("email");
-		String password = params.get("password");
 		
 		if (Database.userAlreadyExists(email))	
 			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_OK, "User exists");
