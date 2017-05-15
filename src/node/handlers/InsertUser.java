@@ -1,20 +1,19 @@
-package node;
+package node.handlers;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.Map;
 
-import org.json.JSONArray;
-
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import database.Database;
+import node.NodeHandler;
 import utils.Exchanges;
 
-public class GetRequests extends NodeHandler implements HttpHandler {
+public class InsertUser extends NodeHandler implements HttpHandler {
 
-	public GetRequests(String[] requiredParams) {
+	public InsertUser(String[] requiredParams) {
 		super(requiredParams);
 	}
 
@@ -26,15 +25,12 @@ public class GetRequests extends NodeHandler implements HttpHandler {
 			return;
 		}
 		
-		String source = params.get("from");
-		String target = params.get("to");
+		String email = params.get("email");
+		String password = params.get("password");
 		
-		JSONArray requestsJSON = Database.getRequests(source, target);
-		
-		if (requestsJSON != null)
-			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_OK, requestsJSON.toString());
+		if (Database.insertUser(email, password))	
+			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_OK, "Inserted user");
 		else
-			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_BAD_REQUEST, "Error getting requests");
+			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_CONFLICT, "User already exists");
 	}
-
 }

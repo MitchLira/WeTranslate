@@ -1,4 +1,4 @@
-package loadbalancer;
+package loadbalancer.handlers;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -8,6 +8,7 @@ import java.util.Map;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
+import loadbalancer.LoadBalancer;
 import utils.Exchanges;
 import utils.RequestMethod;
 

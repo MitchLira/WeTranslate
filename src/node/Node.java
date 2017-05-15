@@ -14,8 +14,19 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 import utils.HttpConnection;
+import utils.RequestMethod;
 
 import com.sun.net.httpserver.*;
+
+import loadbalancer.handlers.RedirectHandler;
+import node.api.UserExists;
+import node.handlers.GetRequests;
+import node.handlers.GetTranslations;
+import node.handlers.InsertRequest;
+import node.handlers.InsertTranslation;
+import node.handlers.InsertUser;
+import node.handlers.Login;
+import node.handlers.TestHandler;
 
 
 public class Node {
@@ -68,6 +79,9 @@ public class Node {
 		server.createContext("/insertTranslation", new InsertTranslation(new String[]{"email", "requestid", "text"}));
 		server.createContext("/getRequests", new GetRequests(new String[]{"from", "to"}));
 		server.createContext("/getTranslations", new GetTranslations(new String[]{"requestid"}));
+		
+		server.createContext("/login", new Login(new String[]{"email", "password"}));
+		server.createContext("/api/userExists", new UserExists(new String[]{"email"}));
 	}
 	
 	public boolean start() throws IOException {

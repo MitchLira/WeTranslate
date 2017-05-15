@@ -10,6 +10,9 @@ import utils.RequestMethod;
 
 import com.sun.net.httpserver.HttpServer;
 
+import loadbalancer.handlers.ConnectServer;
+import loadbalancer.handlers.RedirectHandler;
+
 import org.apache.commons.cli.*;
 
 public class LoadBalancer {
@@ -46,13 +49,17 @@ public class LoadBalancer {
 		this.server = HttpServer.create(new InetSocketAddress(port), 0);
 		
 		System.out.println("Server running on " + server.getAddress());
+		
+		server.createContext("/connect", new ConnectServer(this));
 		server.createContext("/test", new RedirectHandler(this, RequestMethod.getReadMethods()));
 		server.createContext("/insertUser", new RedirectHandler(this, RequestMethod.getInsertMethods()));
 		server.createContext("/insertRequest", new RedirectHandler(this, RequestMethod.getInsertMethods()));
 		server.createContext("/insertTranslation", new RedirectHandler(this, RequestMethod.getInsertMethods()));
 		server.createContext("/getRequests", new RedirectHandler(this, RequestMethod.getReadMethods()));
 		server.createContext("/getTranslations", new RedirectHandler(this, RequestMethod.getReadMethods()));
-		server.createContext("/connect", new ConnectServer(this));
+		
+		server.createContext("/login", new RedirectHandler(this, new String[]{RequestMethod.POST}));
+		server.createContext("/api/userExists", new RedirectHandler(this, new String[]{RequestMethod.POST, RequestMethod.GET}));
 	}
 	
 	public void start() {

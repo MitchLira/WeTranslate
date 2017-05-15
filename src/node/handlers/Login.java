@@ -1,20 +1,19 @@
-package node;
+package node.handlers;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.Map;
 
-import org.json.JSONArray;
-
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import database.Database;
+import node.NodeHandler;
 import utils.Exchanges;
 
-public class GetTranslations extends NodeHandler implements HttpHandler {
+public class Login extends NodeHandler implements HttpHandler {
 
-	public GetTranslations(String[] requiredParams) {
+	public Login(String[] requiredParams) {
 		super(requiredParams);
 	}
 
@@ -25,15 +24,15 @@ public class GetTranslations extends NodeHandler implements HttpHandler {
 			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_BAD_REQUEST, "Parameters do not match.");
 			return;
 		}
-
-		int requestID = Integer.parseInt(params.get("requestid"));
 		
-		JSONArray translationsJSON = Database.getTranslations(requestID);
+		String email = params.get("email");
+		String password = params.get("password");
 		
-		if (translationsJSON != null)
-			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_OK, translationsJSON.toString());
+		if (Database.validUser(email, password))	
+			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_OK, "Signed in");
 		else
-			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_BAD_REQUEST, "Error getting translations");
+			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_NOT_FOUND, "User not found");
+		
 	}
 
 }

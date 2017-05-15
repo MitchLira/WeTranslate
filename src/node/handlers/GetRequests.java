@@ -1,18 +1,21 @@
-package node;
+package node.handlers;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.Map;
 
+import org.json.JSONArray;
+
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import database.Database;
+import node.NodeHandler;
 import utils.Exchanges;
 
-public class InsertRequest extends NodeHandler implements HttpHandler {
+public class GetRequests extends NodeHandler implements HttpHandler {
 
-	public InsertRequest(String[] requiredParams) {
+	public GetRequests(String[] requiredParams) {
 		super(requiredParams);
 	}
 
@@ -24,15 +27,15 @@ public class InsertRequest extends NodeHandler implements HttpHandler {
 			return;
 		}
 		
-		String email = params.get("email");
-		String from = params.get("from");
-		String to = params.get("to");
-		String text = params.get("text");
+		String source = params.get("from");
+		String target = params.get("to");
 		
-		if (Database.insertRequest(email, from, to, text))
-			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_OK, "Inserted request");
+		JSONArray requestsJSON = Database.getRequests(source, target);
+		
+		if (requestsJSON != null)
+			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_OK, requestsJSON.toString());
 		else
-			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_CONFLICT, "Error inserting request");
+			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_BAD_REQUEST, "Error getting requests");
 	}
 
 }

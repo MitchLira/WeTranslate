@@ -78,7 +78,7 @@ public class Database {
 	public static boolean validUser(String username, String password) {
 		try {
 			Connection connection = connect();
-			String sql = ("SELECT email, password FROM requests WHERE (email = ? AND password = ?)");
+			String sql = ("SELECT email, password FROM users WHERE (email = ? AND password = ?)");
 
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			stmt.setString(1, username);
@@ -89,12 +89,15 @@ public class Database {
 			while (rs.next()) {
 				String usernamedb = rs.getString("email");
 				String passworddb =  rs.getString("password");
+				
+				System.out.println(usernamedb + "," + passworddb);
 
 				if ((username.equals(usernamedb)) && (password.equals(passworddb)))
 					return true;
 			}
 		}
 		catch (Exception e) {
+			e.printStackTrace();
 			return false;
 		}
 
@@ -105,16 +108,17 @@ public class Database {
 	public static boolean userAlreadyExists(String username) {
 		try {
 			Connection connection = connect();
-			String sql = ("SELECT email FROM requests WHERE email = ? ");
+			String sql = ("SELECT email FROM users WHERE email = ? ");
 
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			stmt.setString(1, username);
 
 			ResultSet rs = stmt.executeQuery();
 			
-			return !rs.next() ? true : false;
+			return rs.next() ? true : false;
 		}
 		catch (Exception e) {
+			e.printStackTrace();
 			return false;
 		}
 	}

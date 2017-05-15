@@ -1,4 +1,4 @@
-package loadbalancer;
+package loadbalancer.handlers;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -9,6 +9,7 @@ import java.util.Set;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
+import loadbalancer.LoadBalancer;
 import utils.Exchanges;
 
 public class RedirectHandler implements HttpHandler {
