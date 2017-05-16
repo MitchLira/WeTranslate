@@ -74,14 +74,14 @@ public class Node {
 		System.out.println("Server running on " + server.getAddress());
 		
 		server.createContext("/test", new TestHandler());
-		server.createContext("/insertUser", new InsertUser(new String[]{"email", "password"}));
-		server.createContext("/insertRequest", new InsertRequest(new String[]{"email", "from", "to", "text"}));
-		server.createContext("/insertTranslation", new InsertTranslation(new String[]{"email", "requestid", "text"}));
+		server.createContext("/insertUser", new InsertUser(new String[]{"username", "password"}));
+		server.createContext("/insertRequest", new InsertRequest(new String[]{"username", "from", "to", "text"}));
+		server.createContext("/insertTranslation", new InsertTranslation(new String[]{"username", "requestid", "text"}));
 		server.createContext("/getRequests", new GetRequests(new String[]{"from", "to"}));
 		server.createContext("/getTranslations", new GetTranslations(new String[]{"requestid"}));
 		
-		server.createContext("/login", new Login(new String[]{"email", "password"}));
-		server.createContext("/api/userExists", new UserExists(new String[]{"email"}));
+		server.createContext("/login", new Login(new String[]{"username", "password"}));
+		server.createContext("/api/userExists", new UserExists(new String[]{"username"}));
 	}
 	
 	public boolean start() throws IOException {

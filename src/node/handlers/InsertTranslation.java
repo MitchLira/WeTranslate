@@ -25,11 +25,11 @@ public class InsertTranslation extends NodeHandler implements HttpHandler {
 			return;
 		}
 		
-		String email = params.get("email");
+		String username = params.get("username");
 		String text = params.get("text");
 		int requestID = Integer.parseInt(params.get("requestid"));
 		
-		if (Database.insertTranslation(email, text, requestID))
+		if (Database.insertTranslation(username, text, requestID))
 			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_OK, "Inserted translation");
 		else
 			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_CONFLICT, "Error inserting translation");

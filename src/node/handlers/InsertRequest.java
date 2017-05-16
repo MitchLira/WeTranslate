@@ -25,12 +25,12 @@ public class InsertRequest extends NodeHandler implements HttpHandler {
 			return;
 		}
 		
-		String email = params.get("email");
+		String username = params.get("username");
 		String from = params.get("from");
 		String to = params.get("to");
 		String text = params.get("text");
 		
-		if (Database.insertRequest(email, from, to, text))
+		if (Database.insertRequest(username, from, to, text))
 			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_OK, "Inserted request");
 		else
 			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_CONFLICT, "Error inserting request");

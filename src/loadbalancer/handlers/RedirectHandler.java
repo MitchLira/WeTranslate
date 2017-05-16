@@ -33,6 +33,7 @@ public class RedirectHandler implements HttpHandler {
 			return;
 		}
 		
+		
 		String location = loadBalancer.getServer().getLocation();
 		String redirectPath = Exchanges.buildRedirectPath(exch, location);
 		

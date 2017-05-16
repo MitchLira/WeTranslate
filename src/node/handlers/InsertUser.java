@@ -25,10 +25,10 @@ public class InsertUser extends NodeHandler implements HttpHandler {
 			return;
 		}
 		
-		String email = params.get("email");
+		String username = params.get("username");
 		String password = params.get("password");
 		
-		if (Database.insertUser(email, password))	
+		if (Database.insertUser(username, password))	
 			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_OK, "Inserted user");
 		else
 			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_CONFLICT, "User already exists");

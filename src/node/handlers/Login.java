@@ -25,10 +25,10 @@ public class Login extends NodeHandler implements HttpHandler {
 			return;
 		}
 		
-		String email = params.get("email");
+		String username = params.get("username");
 		String password = params.get("password");
 		
-		if (Database.validUser(email, password))	
+		if (Database.validUser(username, password))	
 			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_OK, "Signed in");
 		else
 			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_NOT_FOUND, "User not found");

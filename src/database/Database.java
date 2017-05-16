@@ -15,13 +15,13 @@ public class Database {
 	}
 	
 	
-	public static boolean insertUser(String email, String password) {
+	public static boolean insertUser(String username, String password) {
 		try {
 			Connection connection = connect();
 			String sql = "INSERT INTO users VALUES (?, ?)";
 			
 			PreparedStatement stmt = connection.prepareStatement(sql);
-			stmt.setString(1, email);
+			stmt.setString(1, username);
 			stmt.setString(2, password);
 			
 			stmt.executeUpdate();
@@ -34,16 +34,16 @@ public class Database {
 	}
 	
 	
-	public static boolean insertRequest(String email, String source, String target, String content) {
+	public static boolean insertRequest(String username, String source, String target, String content) {
 		try {
 			Connection connection = connect();
-			String sql = "INSERT INTO requests(content, source, target, user_email) VALUES (?, ?, ?, ?)";
+			String sql = "INSERT INTO requests(content, source, target, user_username) VALUES (?, ?, ?, ?)";
 			
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			stmt.setString(1, content);
 			stmt.setString(2, source);
 			stmt.setString(3, target);
-			stmt.setString(4, email);
+			stmt.setString(4, username);
 			
 			stmt.executeUpdate();
 		}
@@ -55,15 +55,15 @@ public class Database {
 	}
 	
 
-	public static boolean insertTranslation(String email, String content, int requestId) {
+	public static boolean insertTranslation(String username, String content, int requestId) {
 		try {
 			Connection connection = connect();
-			String sql = "INSERT INTO translations(translated_text, requestid, user_email) VALUES (?, ?, ?)";
+			String sql = "INSERT INTO translations(translated_text, requestid, user_username) VALUES (?, ?, ?)";
 			
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			stmt.setString(1, content);
 			stmt.setInt(2, requestId);
-			stmt.setString(3, email);
+			stmt.setString(3, username);
 			
 			stmt.executeUpdate();
 		}
@@ -78,7 +78,7 @@ public class Database {
 	public static boolean validUser(String username, String password) {
 		try {
 			Connection connection = connect();
-			String sql = ("SELECT email, password FROM users WHERE (email = ? AND password = ?)");
+			String sql = ("SELECT username, password FROM users WHERE (username = ? AND password = ?)");
 
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			stmt.setString(1, username);
@@ -87,7 +87,7 @@ public class Database {
 			ResultSet rs = stmt.executeQuery();
 			
 			while (rs.next()) {
-				String usernamedb = rs.getString("email");
+				String usernamedb = rs.getString("username");
 				String passworddb =  rs.getString("password");
 				
 				System.out.println(usernamedb + "," + passworddb);
@@ -108,7 +108,7 @@ public class Database {
 	public static boolean userAlreadyExists(String username) {
 		try {
 			Connection connection = connect();
-			String sql = ("SELECT email FROM users WHERE email = ? ");
+			String sql = ("SELECT username FROM users WHERE username = ? ");
 
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			stmt.setString(1, username);
