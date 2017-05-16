@@ -19,8 +19,8 @@ public class UserExists extends NodeHandler implements HttpHandler {
 
 	@Override
 	public void handle(HttpExchange exch) throws IOException {
-		Map<String, String> params = Exchanges.queryToMap(exch.getRequestURI().getQuery());
-		if (!requestAcceptable(params)) {
+		Map<String, String> params = Exchanges.queryToMap(exch);
+		if (!requestAcceptable(exch, params)) {
 			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_BAD_REQUEST, "Parameters do not match.");
 			return;
 		}

@@ -16,9 +16,10 @@ public class Exchanges {
 	 * @param query
 	 * @return map
 	 */
-	public static Map<String, String> queryToMap(String query){
+	public static Map<String, String> queryToMap(HttpExchange exch) {
 		Map<String, String> result = new HashMap<String, String>();
 		
+		String query = exch.getRequestURI().getQuery();
 		if (query != null) {
 			for (String param : query.split("&")) {
 		        String pair[] = param.split("=");

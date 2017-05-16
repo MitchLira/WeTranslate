@@ -15,7 +15,7 @@ public class TestHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exch) throws IOException {
         String response = "What's up! Is it working? ";
-        Map<String, String> params = Exchanges.queryToMap(exch.getRequestURI().getQuery());
+        Map<String, String> params = Exchanges.queryToMap(exch);
         
         if (params.containsKey("name")) {
         	response += " Hey " + params.get("name") + "!";

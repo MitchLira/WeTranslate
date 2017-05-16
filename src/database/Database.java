@@ -89,8 +89,6 @@ public class Database {
 			while (rs.next()) {
 				String usernamedb = rs.getString("username");
 				String passworddb =  rs.getString("password");
-				
-				System.out.println(usernamedb + "," + passworddb);
 
 				if ((username.equals(usernamedb)) && (password.equals(passworddb)))
 					return true;
