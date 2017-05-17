@@ -2,7 +2,14 @@ package node.handlers;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.Map;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.sql.*;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -13,7 +20,7 @@ import utils.Exchanges;
 
 public class TestHandler implements HttpHandler {
     @Override
-    public void handle(HttpExchange exch) throws IOException {
+    public void handle(HttpExchange exch) {
         String response = "What's up! Is it working? ";
         Map<String, String> params = Exchanges.queryToMap(exch.getRequestURI().getQuery());
         
@@ -22,28 +29,10 @@ public class TestHandler implements HttpHandler {
         }
         
         try {
-			Class.forName("org.postgresql.Driver");
-			Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/sdis","sdis", "sdisdb");
-			
-			if (connection != null)
-				System.out.println("Funcionou amigo");
-			else
-				System.out.println("Upsss");
-			
-			
-			Database.getTranslations(1);
-			
-			
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
+			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_OK, response);
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        
-        System.out.println(response);
-        
-        Exchanges.writeResponse(exch, HttpURLConnection.HTTP_OK, response);
     }
 }

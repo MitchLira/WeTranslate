@@ -3,6 +3,7 @@ package database;
 import java.sql.*;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import node.Node;
 import utils.Converter;
@@ -37,7 +38,7 @@ public class Database {
 	public static boolean insertRequest(String username, String source, String target, String content) {
 		try {
 			Connection connection = connect();
-			String sql = "INSERT INTO requests(content, source, target, user_username) VALUES (?, ?, ?, ?)";
+			String sql = "INSERT INTO requests(content, source, target, username) VALUES (?, ?, ?, ?)";
 			
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			stmt.setString(1, content);
@@ -58,7 +59,7 @@ public class Database {
 	public static boolean insertTranslation(String username, String content, int requestId) {
 		try {
 			Connection connection = connect();
-			String sql = "INSERT INTO translations(translated_text, requestid, user_username) VALUES (?, ?, ?)";
+			String sql = "INSERT INTO translations(translated_text, requestid, username) VALUES (?, ?, ?)";
 			
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			stmt.setString(1, content);
@@ -89,8 +90,6 @@ public class Database {
 			while (rs.next()) {
 				String usernamedb = rs.getString("username");
 				String passworddb =  rs.getString("password");
-				
-				System.out.println(usernamedb + "," + passworddb);
 
 				if ((username.equals(usernamedb)) && (password.equals(passworddb)))
 					return true;
@@ -160,4 +159,45 @@ public class Database {
 		}
 	}
 	
+	
+	public static boolean insertLogin(String username, String address) {
+		try {
+			Connection connection = connect();
+			String sql = "INSERT INTO logins VALUES (?, ?)"
+					+ 	 " ON CONFLICT (username) DO UPDATE"
+					+ 	 " SET address = ?";
+			
+			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt.setString(1, username);
+			stmt.setString(2, address);
+			stmt.setString(3, address);
+			
+			stmt.executeUpdate();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;	
+	}
+	
+	public static JSONArray getRequestUserAddress(int requestid) {
+		try {
+			Connection connection = connect();
+			String sql = "SELECT address FROM logins"
+					+ 	 " JOIN requests ON (logins.username = requests.username)"
+					+ 	 " WHERE requests.id = ?";
+			
+			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt.setInt(1, requestid);
+			
+			ResultSet rs = stmt.executeQuery();
+			return Converter.toJSON(rs);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 }
