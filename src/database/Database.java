@@ -140,6 +140,22 @@ public class Database {
 			return null;
 		}
 	}
+
+	public static JSONArray getRequestsByUsername(String username){
+		try {
+			Connection connection=connect();
+			String sql=("SELECT * FROM requests WHERE username=?");
+
+			PreparedStatement stmt=connection.prepareStatement(sql);
+			stmt.setString(1,username);
+
+			ResultSet rs=stmt.executeQuery();
+			return Converter.toJSON(rs);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
 	
 	
 	public static JSONArray getTranslations(int requestId) {

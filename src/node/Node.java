@@ -78,6 +78,7 @@ public class Node {
 		server.createContext("/insertRequest", new InsertRequest(new String[]{"username", "from", "to", "text"}));
 		server.createContext("/insertTranslation", new InsertTranslation(new String[]{"username", "requestid", "text"}));
 		server.createContext("/getRequests", new GetRequests(new String[]{"from", "to"}));
+		server.createContext("/getRequestsByUsername",new GetRequestsByUsername(new String[]{"username"}));
 		server.createContext("/getTranslations", new GetTranslations(new String[]{"requestid"}));
 		
 		server.createContext("/login", new Login(new String[]{"username", "password"}));

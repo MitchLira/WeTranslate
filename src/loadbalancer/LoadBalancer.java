@@ -56,6 +56,7 @@ public class LoadBalancer {
 		server.createContext("/insertRequest", new RedirectHandler(this, RequestMethod.getInsertMethods()));
 		server.createContext("/insertTranslation", new RedirectHandler(this, RequestMethod.getInsertMethods()));
 		server.createContext("/getRequests", new RedirectHandler(this, RequestMethod.getReadMethods()));
+		server.createContext("/getRequestsByUsername",new RedirectHandler(this,RequestMethod.getReadMethods()));
 		server.createContext("/getTranslations", new RedirectHandler(this, RequestMethod.getReadMethods()));
 		
 		server.createContext("/login", new RedirectHandler(this, new String[]{RequestMethod.POST}));
