@@ -3,6 +3,7 @@ package node.handlers;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.Socket;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.Map;
 
@@ -29,6 +30,19 @@ public class TestHandler implements HttpHandler {
         }
         
         try {
+	    	 StringBuilder builder = new StringBuilder();
+	         builder.append("http://wetranslate.ddns.net:7000/notifyUser?");
+	         builder.append("username="); builder.append("jbarbosa");
+             
+     		try {
+     			HttpURLConnection connection = (HttpURLConnection) new URL(builder.toString()).openConnection();
+     			connection.setRequestMethod("POST");
+     			
+     			connection.getResponseCode();
+     		} catch (IOException e) {
+     			// TODO Auto-generated catch block
+     			e.printStackTrace();
+     		}
 			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_OK, response);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

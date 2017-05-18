@@ -86,12 +86,6 @@ public class Node {
 		
 		server.createContext("/login", new Login(new String[]{"username", "password"}));
 		server.createContext("/api/userExists", new UserExists(new String[]{"username"}));
-		
-		/*
-		WebSocketListener wsl = new WebSocketListener(new URI("ws://wetranslate.ddns.net:7001"));
-		wsl.connectBlocking();
-		wsl.send("jbarbosa");
-		*/
 	}
 	
 	public boolean start() throws IOException {

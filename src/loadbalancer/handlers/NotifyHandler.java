@@ -10,6 +10,7 @@ import com.sun.net.httpserver.HttpHandler;
 import loadbalancer.LoadBalancer;
 import loadbalancer.WebSocketNotifier;
 import utils.Exchanges;
+import utils.RequestMethod;
 
 public class NotifyHandler implements HttpHandler {
 	private WebSocketNotifier wsn;
@@ -20,6 +21,11 @@ public class NotifyHandler implements HttpHandler {
 
 	@Override
 	public void handle(HttpExchange exch) throws IOException {
+		if (!exch.getRequestMethod().equals(RequestMethod.POST)) {
+			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_BAD_METHOD, "Bad method");
+			return;
+		}
+		
 		Map<String, String> params = Exchanges.queryToMap(exch.getRequestURI().getQuery());
 		
 		if (params.containsKey("username")) {

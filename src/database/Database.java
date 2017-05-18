@@ -229,22 +229,25 @@ public class Database {
 		return null;
 	}
 	
-	public static JSONArray getRequestUserAddress(int requestid) {
+	
+	public static String getRequestCreator(int requestid) {
 		try {
 			Connection connection = connect();
-			String sql = "SELECT address FROM logins"
-					+ 	 " JOIN requests ON (logins.username = requests.username)"
-					+ 	 " WHERE requests.id = ?";
+			String sql = "SELECT username FROM requests WHERE id = ?";
 			
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			stmt.setInt(1, requestid);
 			
 			ResultSet rs = stmt.executeQuery();
-			return Converter.toJSON(rs);
+			
+			if (rs.next())
+				return rs.getString("username");
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
+		
+		return null;
 	}
 }

@@ -42,10 +42,14 @@ public class WebSocketNotifier extends WebSocketServer {
 			
 			String realKey = Database.getUserKey(username);
 			
-			if (realKey == null || !key.equals(realKey))
+			if (realKey == null || !key.equals(realKey)) {
+				System.out.println("closed connection");
 				conn.close();
-			else
+			}
+			else {
 				userMap.put(username, conn);
+				System.out.println("accept");
+			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -55,7 +59,9 @@ public class WebSocketNotifier extends WebSocketServer {
 	public void onOpen(WebSocket conn, ClientHandshake handshake) {}
 
 	@Override
-	public void onStart() {}
+	public void onStart() {
+		System.out.println("Websocket started");
+	}
 
 	
 	public void sendToAll( String text ) {
