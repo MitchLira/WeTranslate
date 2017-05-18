@@ -2,7 +2,12 @@ package node.handlers;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
+
+import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -29,8 +34,17 @@ public class Login extends NodeHandler implements HttpHandler {
 		String password = params.get("password");
 		
 		if (Database.validUser(username, password))	{
-			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_OK, "Signed in");
-			Database.insertLogin(username, exch.getRemoteAddress().getAddress().getHostAddress());
+			
+			String key = null;
+			try {
+				String toDigest = username + password + exch.getRemoteAddress().getAddress().getHostAddress();
+				byte[] hash = MessageDigest.getInstance("SHA-256").digest(toDigest.getBytes());
+				key = (new HexBinaryAdapter()).marshal(hash).replaceAll("\\x00", "");
+				
+				Database.insertKey(username, key);
+			} catch (NoSuchAlgorithmException e) {}
+			
+			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_OK, key);
 		}
 		else
 			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_NOT_FOUND, "User not found");

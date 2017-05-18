@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import node.Node;
+import utils.BCrypt;
 import utils.Converter;
 
 public class Database {
@@ -17,13 +18,15 @@ public class Database {
 	
 	
 	public static boolean insertUser(String username, String password) {
+		String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
+		
 		try {
 			Connection connection = connect();
 			String sql = "INSERT INTO users VALUES (?, ?)";
 			
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			stmt.setString(1, username);
-			stmt.setString(2, password);
+			stmt.setString(2, password);		// stmt.setString(2, password);
 			
 			stmt.executeUpdate();
 		}
@@ -87,12 +90,17 @@ public class Database {
 
 			ResultSet rs = stmt.executeQuery();
 			
-			while (rs.next()) {
+			if (rs.next()) {
 				String usernamedb = rs.getString("username");
 				String passworddb =  rs.getString("password");
 
 				if ((username.equals(usernamedb)) && (password.equals(passworddb)))
 					return true;
+				
+				/*
+				 * if (BCrypt.checkpw(password, passworddb))
+				 * 		return true;
+				 */
 			}
 		}
 		catch (Exception e) {
@@ -153,6 +161,7 @@ public class Database {
 			return Converter.toJSON(rs);
 		} catch (Exception e) {
 			e.printStackTrace();
+			return null;
 		}
 
 	}
@@ -176,17 +185,17 @@ public class Database {
 	}
 	
 	
-	public static boolean insertLogin(String username, String address) {
+	public static boolean insertKey(String username, String key) {
 		try {
 			Connection connection = connect();
-			String sql = "INSERT INTO logins VALUES (?, ?)"
+			String sql = "INSERT INTO user_keys VALUES (?, ?)"
 					+ 	 " ON CONFLICT (username) DO UPDATE"
-					+ 	 " SET address = ?";
+					+ 	 " SET key = ?";
 			
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			stmt.setString(1, username);
-			stmt.setString(2, address);
-			stmt.setString(3, address);
+			stmt.setString(2, key);
+			stmt.setString(3, key);
 			
 			stmt.executeUpdate();
 		}
@@ -196,6 +205,28 @@ public class Database {
 		}
 		
 		return true;	
+	}
+	
+	
+	public static String getUserKey(String username) {
+		try {
+			Connection connection = connect();
+			String sql = "SELECT key FROM user_keys WHERE username = ?";
+			
+			PreparedStatement stmt = connection.prepareStatement(sql);
+			stmt.setString(1, username);
+			
+			ResultSet rs = stmt.executeQuery();
+			
+			if (rs.next())
+				return rs.getString("key");
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+		return null;
 	}
 	
 	public static JSONArray getRequestUserAddress(int requestid) {

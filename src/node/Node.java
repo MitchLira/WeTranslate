@@ -3,6 +3,8 @@ package node;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.apache.commons.cli.CommandLine;
@@ -20,6 +22,7 @@ import com.sun.net.httpserver.*;
 
 import loadbalancer.handlers.RedirectHandler;
 import node.api.UserExists;
+import node.handlers.GetRequestByUsername;
 import node.handlers.GetRequests;
 import node.handlers.GetTranslations;
 import node.handlers.InsertRequest;
@@ -78,11 +81,17 @@ public class Node {
 		server.createContext("/insertRequest", new InsertRequest(new String[]{"username", "from", "to", "text"}));
 		server.createContext("/insertTranslation", new InsertTranslation(new String[]{"username", "requestid", "text"}));
 		server.createContext("/getRequests", new GetRequests(new String[]{"from", "to"}));
-		server.createContext("/getRequestsByUsername",new GetRequestsByUsername(new String[]{"username"}));
+		server.createContext("/getRequestsByUsername", new GetRequestByUsername(new String[]{"username"}));
 		server.createContext("/getTranslations", new GetTranslations(new String[]{"requestid"}));
 		
 		server.createContext("/login", new Login(new String[]{"username", "password"}));
 		server.createContext("/api/userExists", new UserExists(new String[]{"username"}));
+		
+		/*
+		WebSocketListener wsl = new WebSocketListener(new URI("ws://wetranslate.ddns.net:7001"));
+		wsl.connectBlocking();
+		wsl.send("jbarbosa");
+		*/
 	}
 	
 	public boolean start() throws IOException {

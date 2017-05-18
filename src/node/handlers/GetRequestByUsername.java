@@ -2,6 +2,8 @@ package node.handlers;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+
+import database.Database;
 import node.NodeHandler;
 import org.json.JSONArray;
 import utils.Exchanges;
