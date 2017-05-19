@@ -31,8 +31,8 @@ public class Login extends NodeHandler implements HttpHandler {
 			return;
 		}
 		
-		String username = URLDecoder.decode(params.get("username"),"UTF-8");
-		String password = URLDecoder.decode(params.get("password"),"UTF-8");
+		String username = params.get("username");
+		String password = params.get("password");
 		
 		if (Database.validUser(username, password))	{
 			

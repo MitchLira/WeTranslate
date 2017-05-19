@@ -28,7 +28,7 @@ public class GetTranslations extends NodeHandler implements HttpHandler {
 			return;
 		}
 
-		int requestID = Integer.parseInt(URLDecoder.decode(params.get("requestid"),"UTF-8"));
+		int requestID = Integer.parseInt(params.get("requestid"));
 		
 		JSONArray translationsJSON = Database.getTranslations(requestID);
 		

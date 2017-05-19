@@ -26,10 +26,10 @@ public class InsertRequest extends NodeHandler implements HttpHandler {
 			return;
 		}
 
-		String username = URLDecoder.decode(params.get("username"),"UTF-8");
-		String from = URLDecoder.decode(params.get("from"),"UTF-8");
-		String to = URLDecoder.decode(params.get("to"),"UTF-8");
-		String text = URLDecoder.decode(params.get("text"),"UTF-8");
+		String username = params.get("username");
+		String from = params.get("from");
+		String to = params.get("to");
+		String text = params.get("text");
 		
 		if (Database.insertRequest(username, from, to, text))
 			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_OK, "Inserted request");

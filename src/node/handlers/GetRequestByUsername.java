@@ -26,7 +26,7 @@ public class GetRequestByUsername extends NodeHandler implements HttpHandler{
             return;
         }
 
-        String username = URLDecoder.decode(params.get("username"),"UTF-8");
+        String username = params.get("username");
 
         JSONArray requestsJSON = Database.getRequestsByUsername(username);
 

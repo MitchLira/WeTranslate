@@ -28,8 +28,8 @@ public class GetRequests extends NodeHandler implements HttpHandler {
 			return;
 		}
 		
-		String source = URLDecoder.decode(params.get("from"),"UTF-8");
-		String target = URLDecoder.decode(params.get("to"),"UTF-8");
+		String source = params.get("from");
+		String target = params.get("to");
 		
 		JSONArray requestsJSON = Database.getRequests(source, target);
 		
