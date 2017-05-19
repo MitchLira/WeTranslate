@@ -11,6 +11,7 @@ import com.sun.net.httpserver.HttpHandler;
 
 import loadbalancer.LoadBalancer;
 import utils.Exchanges;
+import utils.NodeData;
 
 public class RedirectHandler implements HttpHandler {
 	private LoadBalancer loadBalancer;
@@ -34,7 +35,13 @@ public class RedirectHandler implements HttpHandler {
 		}
 		
 		
-		String location = loadBalancer.getServer().getLocation();
+		NodeData nd = loadBalancer.getServer();
+		if (nd == null) {
+			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_INTERNAL_ERROR, "Internal error");
+			return;
+		}
+		
+		String location = nd.getLocation();
 		String redirectPath = Exchanges.buildRedirectPath(exch, location);
 		
 		System.out.println("Redirecting to: " + redirectPath);

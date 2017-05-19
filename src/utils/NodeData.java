@@ -1,6 +1,8 @@
 package utils;
 
-public class NodeData implements Comparable<NodeData> {
+import java.io.Serializable;
+
+public class NodeData implements Comparable<NodeData>, Serializable {
 	private String addr;
 	private String port;
 	private String location;

@@ -28,6 +28,10 @@ public class TestHandler implements HttpHandler {
         if (params.containsKey("name")) {
         	response += " Hey " + params.get("name") + "!";
         }
+        
+        try {
+			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_OK, response);
+		} catch (IOException e) {}
 
         /*try {
 	    	 StringBuilder builder = new StringBuilder();
