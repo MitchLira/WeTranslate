@@ -28,8 +28,8 @@ public class TestHandler implements HttpHandler {
         if (params.containsKey("name")) {
         	response += " Hey " + params.get("name") + "!";
         }
-        
-        try {
+
+        /*try {
 	    	 StringBuilder builder = new StringBuilder();
 	         builder.append("http://wetranslate.ddns.net:7000/notifyUser?");
 	         builder.append("username="); builder.append("jbarbosa");
@@ -47,6 +47,6 @@ public class TestHandler implements HttpHandler {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
     }
 }

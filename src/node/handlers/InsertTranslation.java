@@ -2,6 +2,7 @@ package node.handlers;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Map;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -29,8 +30,22 @@ public class InsertTranslation extends NodeHandler implements HttpHandler {
 		String text = params.get("text");
 		int requestID = Integer.parseInt(params.get("requestid"));
 		
-		if (Database.insertTranslation(username, text, requestID))
+		if (Database.insertTranslation(username, text, requestID)){
+			String user=Database.getRequestCreator(requestID);
+			StringBuilder builder = new StringBuilder();
+			builder.append("http://wetranslate.ddns.net:7000/notifyUser?");
+			builder.append("username="); builder.append(user);
+
+			try {
+				HttpURLConnection connection = (HttpURLConnection) new URL(builder.toString()).openConnection();
+				connection.setRequestMethod("POST");
+				connection.getResponseCode();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_OK, "Inserted translation");
+		}
 		else
 			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_CONFLICT, "Error inserting translation");
 	}
