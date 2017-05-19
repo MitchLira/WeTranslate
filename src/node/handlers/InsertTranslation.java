@@ -3,6 +3,7 @@ package node.handlers;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.Map;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -26,9 +27,9 @@ public class InsertTranslation extends NodeHandler implements HttpHandler {
 			return;
 		}
 		
-		String username = params.get("username");
-		String text = params.get("text");
-		int requestID = Integer.parseInt(params.get("requestid"));
+		String username = URLDecoder.decode(params.get("username"),"UTF-8");
+		String text = URLDecoder.decode(params.get("text"),"UTF-8");
+		int requestID = Integer.parseInt(URLDecoder.decode(params.get("requestid"),"UTF-8"));
 		
 		if (Database.insertTranslation(username, text, requestID)){
 			String user=Database.getRequestCreator(requestID);

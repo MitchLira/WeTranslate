@@ -2,6 +2,7 @@ package node.handlers;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -30,8 +31,8 @@ public class Login extends NodeHandler implements HttpHandler {
 			return;
 		}
 		
-		String username = params.get("username");
-		String password = params.get("password");
+		String username = URLDecoder.decode(params.get("username"),"UTF-8");
+		String password = URLDecoder.decode(params.get("password"),"UTF-8");
 		
 		if (Database.validUser(username, password))	{
 			

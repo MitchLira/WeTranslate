@@ -10,6 +10,7 @@ import utils.Exchanges;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URLDecoder;
 import java.util.Map;
 
 public class GetRequestByUsername extends NodeHandler implements HttpHandler{
@@ -25,7 +26,7 @@ public class GetRequestByUsername extends NodeHandler implements HttpHandler{
             return;
         }
 
-        String username = params.get("username");
+        String username = URLDecoder.decode(params.get("username"),"UTF-8");
 
         JSONArray requestsJSON = Database.getRequestsByUsername(username);
 

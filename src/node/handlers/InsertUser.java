@@ -2,6 +2,7 @@ package node.handlers;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URLDecoder;
 import java.util.Map;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -25,8 +26,8 @@ public class InsertUser extends NodeHandler implements HttpHandler {
 			return;
 		}
 		
-		String username = params.get("username");
-		String password = params.get("password");
+		String username = URLDecoder.decode(params.get("username"),"UTF-8");
+		String password = URLDecoder.decode(params.get("password"),"UTF-8");
 		
 		if (Database.insertUser(username, password))	
 			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_OK, "Inserted user");

@@ -2,6 +2,7 @@ package node.handlers;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URLDecoder;
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -27,7 +28,7 @@ public class GetTranslations extends NodeHandler implements HttpHandler {
 			return;
 		}
 
-		int requestID = Integer.parseInt(params.get("requestid"));
+		int requestID = Integer.parseInt(URLDecoder.decode(params.get("requestid"),"UTF-8"));
 		
 		JSONArray translationsJSON = Database.getTranslations(requestID);
 		

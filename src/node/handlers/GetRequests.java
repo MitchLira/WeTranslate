@@ -2,6 +2,7 @@ package node.handlers;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URLDecoder;
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -27,8 +28,8 @@ public class GetRequests extends NodeHandler implements HttpHandler {
 			return;
 		}
 		
-		String source = params.get("from");
-		String target = params.get("to");
+		String source = URLDecoder.decode(params.get("from"),"UTF-8");
+		String target = URLDecoder.decode(params.get("to"),"UTF-8");
 		
 		JSONArray requestsJSON = Database.getRequests(source, target);
 		

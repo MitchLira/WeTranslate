@@ -2,6 +2,7 @@ package node.handlers;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URLDecoder;
 import java.util.Map;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -24,11 +25,11 @@ public class InsertRequest extends NodeHandler implements HttpHandler {
 			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_BAD_REQUEST, "Parameters do not match.");
 			return;
 		}
-		
-		String username = params.get("username");
-		String from = params.get("from");
-		String to = params.get("to");
-		String text = params.get("text");
+
+		String username = URLDecoder.decode(params.get("username"),"UTF-8");
+		String from = URLDecoder.decode(params.get("from"),"UTF-8");
+		String to = URLDecoder.decode(params.get("to"),"UTF-8");
+		String text = URLDecoder.decode(params.get("text"),"UTF-8");
 		
 		if (Database.insertRequest(username, from, to, text))
 			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_OK, "Inserted request");
