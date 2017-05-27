@@ -32,25 +32,5 @@ public class TestHandler implements HttpHandler {
         try {
 			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_OK, response);
 		} catch (IOException e) {}
-
-        /*try {
-	    	 StringBuilder builder = new StringBuilder();
-	         builder.append("http://wetranslate.ddns.net:7000/notifyUser?");
-	         builder.append("username="); builder.append("jbarbosa");
-             
-     		try {
-     			HttpURLConnection connection = (HttpURLConnection) new URL(builder.toString()).openConnection();
-     			connection.setRequestMethod("POST");
-     			
-     			connection.getResponseCode();
-     		} catch (IOException e) {
-     			// TODO Auto-generated catch block
-     			e.printStackTrace();
-     		}
-			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_OK, response);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
     }
 }

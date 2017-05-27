@@ -39,20 +39,20 @@ public class Node {
 	private HttpsServer server;
 	private int port;
 	private SSLContext sslContext;
-
+	
 	static {
 		//for localhost testing only
 		javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(
-				new javax.net.ssl.HostnameVerifier(){
+		new javax.net.ssl.HostnameVerifier(){
 
-					public boolean verify(String hostname,
-										  javax.net.ssl.SSLSession sslSession) {
-						if (hostname.equals("localhost")) {
-							return true;
-						}
-						return false;
-					}
-				});
+			public boolean verify(String hostname,
+								  javax.net.ssl.SSLSession sslSession) {
+				if (hostname.equals("localhost") || hostname.equals("wetranslate.ddns.net")) {
+					return true;
+				}
+				return false;
+			}
+		});
 	}
 	
 	public static void main(String[] args) throws IOException, UnrecoverableKeyException, CertificateException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException {

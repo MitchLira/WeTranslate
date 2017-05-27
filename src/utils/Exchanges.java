@@ -52,7 +52,7 @@ public class Exchanges {
 	public static String buildRedirectPath(HttpExchange exch, String location) {
 		StringBuilder builder = new StringBuilder();
 		
-		builder.append("http://");
+		builder.append("https://");
     	builder.append(location);
     	builder.append(exch.getRequestURI().getPath());
     	if (exch.getRequestURI().getQuery() != null) {
