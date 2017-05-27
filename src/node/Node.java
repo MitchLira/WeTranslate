@@ -126,17 +126,20 @@ public class Node {
 	private void initializeServer() throws FileNotFoundException, KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException, KeyManagementException {
 		// load certificate
 		this.server = HttpsServer.create(new InetSocketAddress(port), 0);
-		String keystoreFilename = "server.keys";
-		char[] keypass = "123456".toCharArray();
-		FileInputStream fIn = new FileInputStream(keystoreFilename);
+		char[] password = "123456".toCharArray();
+		FileInputStream fKeys = new FileInputStream( "server.keys");
+		FileInputStream fStore=new FileInputStream("truststore");
 		KeyStore keystore = KeyStore.getInstance("JKS");
-		keystore.load(fIn, keypass);
+		KeyStore truststore=KeyStore.getInstance("JKS");
+		keystore.load(fKeys, password);
+		truststore.load(fStore,password);
+
 
 		TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
-		tmf.init(keystore);
+		tmf.init(truststore);
 
 		KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
-		kmf.init(keystore, keypass);
+		kmf.init(keystore, password);
 
 
 		sslContext=SSLContext.getInstance("TLS");

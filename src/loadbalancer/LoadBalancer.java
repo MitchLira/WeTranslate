@@ -130,17 +130,23 @@ public class LoadBalancer {
 	private void initializeServer() throws  KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException, KeyManagementException  {
 		// load certificate
 		this.server = HttpsServer.create(new InetSocketAddress(7000), 0);
-		String keystoreFilename = "server.keys";
-		char[] keypass = "123456".toCharArray();
-		FileInputStream fIn = new FileInputStream(keystoreFilename);
+		char[] password = "123456".toCharArray();
+		FileInputStream fKeys = new FileInputStream( "server.keys");
+		FileInputStream fStore=new FileInputStream("truststore");
 		KeyStore keystore = KeyStore.getInstance("JKS");
-		keystore.load(fIn, keypass);
+		KeyStore truststore=KeyStore.getInstance("JKS");
+		keystore.load(fKeys, password);
+		truststore.load(fStore,password);
+
+
+		TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
+		tmf.init(truststore);
 
 		KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
-		kmf.init(keystore, keypass);
+		kmf.init(keystore, password);
 
 		SSLContext sslContext=SSLContext.getInstance("TLS");
-		sslContext.init(kmf.getKeyManagers(),null,null);
+		sslContext.init(kmf.getKeyManagers(),tmf.getTrustManagers(),null);
 		server.setHttpsConfigurator(new HttpsConfigurator(sslContext));
 	}
 	
