@@ -1,14 +1,17 @@
 package loadbalancer;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.security.*;
+import java.security.cert.CertificateException;
 import java.util.Random;
 
+import com.sun.net.httpserver.HttpsConfigurator;
+import com.sun.net.httpserver.HttpsParameters;
+import com.sun.net.httpserver.HttpsServer;
 import utils.NodeData;
 import utils.NodeList;
 import utils.RequestMethod;
@@ -19,12 +22,27 @@ import loadbalancer.handlers.ConnectServer;
 import loadbalancer.handlers.NotifyHandler;
 import loadbalancer.handlers.RedirectHandler;
 
-import org.apache.commons.cli.*;
+import javax.net.ssl.*;
 
 public class LoadBalancer {
 	private NodeList nodes;
-	private HttpServer server;
+	private HttpsServer server;
 	private WebSocketNotifier wsn;
+
+	static {
+		//for localhost testing only
+		javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(
+				new javax.net.ssl.HostnameVerifier(){
+
+					public boolean verify(String hostname,
+										  javax.net.ssl.SSLSession sslSession) {
+						if (hostname.equals("localhost")) {
+							return true;
+						}
+						return false;
+					}
+				});
+	}
 	private ServerSocket messenger;
 
 	public static void main(String[] args) {
@@ -80,7 +98,8 @@ public class LoadBalancer {
 	
 	private boolean onCreate() {
 		try {
-			this.server = HttpServer.create(new InetSocketAddress(7000), 0);
+
+			initializeServer();
 			this.wsn = new WebSocketNotifier(7001);
 			this.messenger = new ServerSocket(7002);
 			
@@ -102,10 +121,27 @@ public class LoadBalancer {
 			server.createContext("/notifyUser", new NotifyHandler(wsn));
 		}
 		catch (Exception e) {
-			return false;
+			e.printStackTrace();
 		}
 		
 		return true;
+	}
+
+	private void initializeServer() throws  KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException, KeyManagementException  {
+		// load certificate
+		this.server = HttpsServer.create(new InetSocketAddress(7000), 0);
+		String keystoreFilename = "server.keys";
+		char[] keypass = "123456".toCharArray();
+		FileInputStream fIn = new FileInputStream(keystoreFilename);
+		KeyStore keystore = KeyStore.getInstance("JKS");
+		keystore.load(fIn, keypass);
+
+		KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+		kmf.init(keystore, keypass);
+
+		SSLContext sslContext=SSLContext.getInstance("TLS");
+		sslContext.init(kmf.getKeyManagers(),null,null);
+		server.setHttpsConfigurator(new HttpsConfigurator(sslContext));
 	}
 	
 	private void startMessenger() {

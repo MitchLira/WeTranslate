@@ -26,7 +26,7 @@ public class Database {
 			
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			stmt.setString(1, username);
-			stmt.setString(2, password);		// stmt.setString(2, password);
+			stmt.setString(2, hashed);
 			
 			stmt.executeUpdate();
 		}
@@ -94,13 +94,10 @@ public class Database {
 				String usernamedb = rs.getString("username");
 				String passworddb =  rs.getString("password");
 
-				if ((username.equals(usernamedb)) && (password.equals(passworddb)))
+				if (username.equals(usernamedb) && BCrypt.checkpw(password, passworddb))
 					return true;
-				
-				/*
-				 * if (BCrypt.checkpw(password, passworddb))
-				 * 		return true;
-				 */
+
+
 			}
 		}
 		catch (Exception e) {

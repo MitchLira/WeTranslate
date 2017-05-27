@@ -1,11 +1,13 @@
 package node;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
+import java.security.*;
+import java.security.cert.CertificateException;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -16,11 +18,9 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 import utils.HttpConnection;
-import utils.RequestMethod;
 
 import com.sun.net.httpserver.*;
 
-import loadbalancer.handlers.RedirectHandler;
 import node.api.UserExists;
 import node.handlers.GetRequestByUsername;
 import node.handlers.GetRequests;
@@ -31,13 +31,31 @@ import node.handlers.InsertUser;
 import node.handlers.Login;
 import node.handlers.TestHandler;
 
+import javax.net.ssl.*;
+
 
 public class Node {
 	public static String hostName = "wetranslate.ddns.net";
-	private HttpServer server;
+	private HttpsServer server;
 	private int port;
+	private SSLContext sslContext;
+
+	static {
+		//for localhost testing only
+		javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(
+				new javax.net.ssl.HostnameVerifier(){
+
+					public boolean verify(String hostname,
+										  javax.net.ssl.SSLSession sslSession) {
+						if (hostname.equals("localhost")) {
+							return true;
+						}
+						return false;
+					}
+				});
+	}
 	
-	public static void main(String[] args) throws IOException {		
+	public static void main(String[] args) throws IOException, UnrecoverableKeyException, CertificateException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
 		Options options = new Options();
 		
 		Option portOption = new Option("p", "port", true, "listening port");
@@ -70,9 +88,9 @@ public class Node {
 	}
 	
 	
-	public Node(int port) throws IOException {
+	public Node(int port) throws IOException, UnrecoverableKeyException, CertificateException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
 		this.port = port;
-		this.server = HttpServer.create(new InetSocketAddress(port), 0);
+		initializeServer();
 		
 		System.out.println("Server running on " + server.getAddress());
 		
@@ -83,7 +101,7 @@ public class Node {
 		server.createContext("/getRequests", new GetRequests(new String[]{"from", "to"}));
 		server.createContext("/getRequestsByUsername", new GetRequestByUsername(new String[]{"username"}));
 		server.createContext("/getTranslations", new GetTranslations(new String[]{"requestid"}));
-		
+
 		server.createContext("/login", new Login(new String[]{"username", "password"}));
 		server.createContext("/api/userExists", new UserExists(new String[]{"username"}));
 	}
@@ -92,15 +110,38 @@ public class Node {
 		server.start();
 		
 		/* Connect to Load Balancer */
-		HttpURLConnection connection = (HttpURLConnection) new URL("http://" + hostName + ":7000/connect?port=" + port).openConnection();
+		HttpsURLConnection connection = (HttpsURLConnection) new URL("https://" + hostName + ":7000/connect?port=" + port).openConnection();
+		connection.setSSLSocketFactory(sslContext.getSocketFactory());
 		connection.setRequestMethod("POST");
-		
-		if (HttpConnection.getCode(connection) != HttpURLConnection.HTTP_ACCEPTED) {
+
+		if (HttpConnection.getCode(connection) != HttpsURLConnection.HTTP_ACCEPTED) {
 			System.out.println("Node failed to start: " + HttpConnection.getMessage(connection));
 			server.stop(0);
 			return false;
 		}
 		
 		return true;
+	}
+
+	private void initializeServer() throws FileNotFoundException, KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, UnrecoverableKeyException, KeyManagementException {
+		// load certificate
+		this.server = HttpsServer.create(new InetSocketAddress(port), 0);
+		String keystoreFilename = "server.keys";
+		char[] keypass = "123456".toCharArray();
+		FileInputStream fIn = new FileInputStream(keystoreFilename);
+		KeyStore keystore = KeyStore.getInstance("JKS");
+		keystore.load(fIn, keypass);
+
+		TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
+		tmf.init(keystore);
+
+		KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+		kmf.init(keystore, keypass);
+
+
+		sslContext=SSLContext.getInstance("TLS");
+		sslContext.init(kmf.getKeyManagers(),tmf.getTrustManagers(),null);
+
+		server.setHttpsConfigurator(new HttpsConfigurator(sslContext));
 	}
 }
