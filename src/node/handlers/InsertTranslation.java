@@ -6,6 +6,9 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Map;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
@@ -14,9 +17,11 @@ import node.NodeHandler;
 import utils.Exchanges;
 
 public class InsertTranslation extends NodeHandler implements HttpHandler {
+	private SSLContext sslContext;
 
-	public InsertTranslation(String[] requiredParams) {
+	public InsertTranslation(SSLContext sslContext, String[] requiredParams) {
 		super(requiredParams);
+		this.sslContext = sslContext;
 	}
 
 	@Override
@@ -34,15 +39,15 @@ public class InsertTranslation extends NodeHandler implements HttpHandler {
 		if (Database.insertTranslation(username, text, requestID)){
 			String user=Database.getRequestCreator(requestID);
 			StringBuilder builder = new StringBuilder();
-			builder.append("http://wetranslate.ddns.net:7000/notifyUser?");
+			builder.append("https://wetranslate.ddns.net:7000/notifyUser?");
 			builder.append("username="); builder.append(user);
 
 			try {
-				HttpURLConnection connection = (HttpURLConnection) new URL(builder.toString()).openConnection();
+				HttpsURLConnection connection = (HttpsURLConnection) new URL(builder.toString()).openConnection();
+				connection.setSSLSocketFactory(sslContext.getSocketFactory());
 				connection.setRequestMethod("POST");
 				connection.getResponseCode();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			Exchanges.writeResponse(exch, HttpURLConnection.HTTP_OK, "Inserted translation");

@@ -41,10 +41,8 @@ public class Node {
 	private SSLContext sslContext;
 	
 	static {
-		//for localhost testing only
 		javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(
 		new javax.net.ssl.HostnameVerifier(){
-
 			public boolean verify(String hostname,
 								  javax.net.ssl.SSLSession sslSession) {
 				if (hostname.equals("localhost") || hostname.equals("wetranslate.ddns.net")) {
@@ -97,7 +95,7 @@ public class Node {
 		server.createContext("/test", new TestHandler());
 		server.createContext("/insertUser", new InsertUser(new String[]{"username", "password"}));
 		server.createContext("/insertRequest", new InsertRequest(new String[]{"username", "from", "to", "text"}));
-		server.createContext("/insertTranslation", new InsertTranslation(new String[]{"username", "requestid", "text"}));
+		server.createContext("/insertTranslation", new InsertTranslation(sslContext, new String[]{"username", "requestid", "text"}));
 		server.createContext("/getRequests", new GetRequests(new String[]{"from", "to"}));
 		server.createContext("/getRequestsByUsername", new GetRequestByUsername(new String[]{"username"}));
 		server.createContext("/getTranslations", new GetTranslations(new String[]{"requestid"}));
