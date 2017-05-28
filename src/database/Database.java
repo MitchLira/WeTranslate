@@ -82,22 +82,17 @@ public class Database {
 	public static boolean validUser(String username, String password) {
 		try {
 			Connection connection = connect();
-			String sql = ("SELECT username, password FROM users WHERE (username = ? AND password = ?)");
+			String sql = ("SELECT username, password FROM users WHERE username = ?");
 
 			PreparedStatement stmt = connection.prepareStatement(sql);
 			stmt.setString(1, username);
-			stmt.setString(2, password);
-
+			
 			ResultSet rs = stmt.executeQuery();
 			
 			if (rs.next()) {
-				String usernamedb = rs.getString("username");
 				String passworddb =  rs.getString("password");
-
-				if (username.equals(usernamedb) && BCrypt.checkpw(password, passworddb))
+				if (BCrypt.checkpw(password, passworddb))
 					return true;
-
-
 			}
 		}
 		catch (Exception e) {
